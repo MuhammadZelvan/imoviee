@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Home"
+        android:id="@+id/home"
+        android:icon="@drawable/home_icon"/>
+
+    <item android:title="Schedule"
+        android:id="@+id/schedule"
+        android:icon="@drawable/calendar_clock_icon"/>
+
+    <item android:title="History"
+        android:id="@+id/history"
+        android:icon="@drawable/history_icon"/>
+
+    <item android:title="Watchlist"
+        android:id="@+id/watchlist"
+        android:icon="@drawable/watchlist_icon"/>
+
+    <item android:title="Profile"
+        android:id="@+id/profile"
+        android:icon="@drawable/person_icon"/>
+</menu>

@@ -11,15 +11,15 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="99dp"
         android:layout_marginTop="88dp"
         android:contentDescription="loginicon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logologin" />
+        app:srcCompat="@drawable/logoimoviee_rounded" />
 
     <TextView
         android:id="@+id/textView2"
@@ -53,13 +53,13 @@
 
     <EditText
         android:id="@+id/editTextTextPassword"
-        android:layout_width="275dp"
-        android:layout_height="wrap_content"
+        android:layout_width="325dp"
+        android:layout_height="48dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
         android:textColor="#FFFFFF"
-        android:textColorHint="#434343"
+        android:textColorHint="#6A6A6A"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -68,13 +68,13 @@
 
     <EditText
         android:id="@+id/editTextTextEmailAddress"
-        android:layout_width="275dp"
-        android:layout_height="46dp"
+        android:layout_width="325dp"
+        android:layout_height="48dp"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
         android:textColor="#FFFFFF"
-        android:textColorHint="#434343"
+        android:textColorHint="#6A6A6A"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -106,7 +106,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btnLogin"
         android:layout_width="285dp"
         android:layout_height="50dp"
         android:layout_marginBottom="176dp"
@@ -132,7 +132,7 @@
         app:layout_constraintVertical_bias="0.612" />
 
     <Button
-        android:id="@+id/button_with_icon"
+        android:id="@+id/btnLoginGoogle"
         android:layout_width="285dp"
         android:layout_height="50dp"
         android:layout_marginBottom="120dp"
