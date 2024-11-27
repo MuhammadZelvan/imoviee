@@ -13,6 +13,21 @@
         android:theme="@style/Theme.IMoviee"
         tools:targetApi="31">
         <activity
+            android:name=".PlayingFullscreen"
+            android:exported="false"/>
+        <activity
+            android:name=".Playing"
+            android:exported="false" />
+        <activity
+            android:name=".InfoFilm"
+            android:exported="false" />
+        <activity
+            android:name=".AccCreated"
+            android:exported="false" />
+        <activity
+            android:name=".Register"
+            android:exported="false" />
+        <activity
             android:name=".LayoutApp"
             android:exported="false" />
         <activity

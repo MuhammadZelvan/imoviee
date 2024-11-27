@@ -11,5 +11,6 @@
         <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
     </style>
 
+
     <style name="Theme.IMoviee" parent="Base.Theme.IMoviee" />
 </resources>

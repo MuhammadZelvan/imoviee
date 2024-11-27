@@ -1,10 +1,13 @@
 package com.zelvan.imoviee
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,7 +37,16 @@ class Home : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        val view =  inflater.inflate(R.layout.fragment_home, container, false)
+
+        // Find the button and set its click listener
+        val backButton: LinearLayout = view.findViewById(R.id.btntoinfofilm)
+        backButton.setOnClickListener {
+            val intent = Intent(requireContext(), InfoFilm::class.java)
+            startActivity(intent)
+        }
+
+        return view
     }
 
     override fun onResume() {
