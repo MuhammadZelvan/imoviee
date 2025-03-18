@@ -182,8 +182,9 @@
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="156dp"
         android:text="Or Continue With"
-        tools:layout_editor_absoluteX="153dp"
-        tools:layout_editor_absoluteY="551dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="153dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
