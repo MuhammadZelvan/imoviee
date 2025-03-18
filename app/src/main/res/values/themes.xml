@@ -7,7 +7,7 @@
 
     <style name="CustomBottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="materialButtonStyle">@style/Widget.MaterialComponents.Button</item>
-<!--        <item name="materialIconButtonStyle">@style/Widget.MaterialComponents.IconButton</item>-->
+        <!--        <item name="materialIconButtonStyle">@style/Widget.MaterialComponents.IconButton</item>-->
         <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
     </style>
 

@@ -109,7 +109,7 @@
         android:id="@+id/btnLogin"
         android:layout_width="285dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="176dp"
+        android:layout_marginBottom="196dp"
         android:backgroundTint="#951515"
         android:text="Log In"
         android:textColor="#FFFFFF"
@@ -133,18 +133,35 @@
 
     <Button
         android:id="@+id/btnLoginGoogle"
-        android:layout_width="285dp"
+        android:layout_width="38dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="120dp"
+        android:layout_marginBottom="92dp"
         android:backgroundTint="#FFFFFF"
         android:drawableLeft="@drawable/googleicon"
         android:drawablePadding="8dp"
         android:gravity="center"
         android:padding="10dp"
-        android:text="Log In with Google"
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.41"
+        app:layout_constraintStart_toStartOf="parent"
+        app:rippleColor="#9A9A9A" />
+
+    <Button
+        android:id="@+id/btnLoginTelp"
+        android:layout_width="38dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="92dp"
+        android:backgroundTint="#FFFFFF"
+        android:drawableStart="@drawable/telp"
+        android:drawablePadding="8dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.589"
         app:layout_constraintStart_toStartOf="parent"
         app:rippleColor="#9A9A9A" />
 
@@ -160,5 +177,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.606" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Or Continue With"
+        tools:layout_editor_absoluteX="153dp"
+        tools:layout_editor_absoluteY="551dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

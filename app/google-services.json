@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "517898032695",
+    "project_id": "imoviee-fd8f6",
+    "storage_bucket": "imoviee-fd8f6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517898032695:android:d2b084aa0e87ebc89bd1b2",
+        "android_client_info": {
+          "package_name": "com.zelvan.imoviee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "517898032695-oo7ug7h83fkpvjoc2nk4ftjcac14ftdm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zelvan.imoviee",
+            "certificate_hash": "510add64dcb1ce29402e37527111a3a1279c83d5"
+          }
+        },
+        {
+          "client_id": "517898032695-cjc4b9li45bhp5vao4897rvin99e0vdv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDq16J1qBhB7zz1UG0Vc-zSROkBpH8CJfk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "517898032695-cjc4b9li45bhp5vao4897rvin99e0vdv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
