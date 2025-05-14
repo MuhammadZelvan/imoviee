@@ -13,4 +13,13 @@
 
 
     <style name="Theme.IMoviee" parent="Base.Theme.IMoviee" />
+
+    <style name="Theme.IMoviee.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.IMoviee.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.IMoviee.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

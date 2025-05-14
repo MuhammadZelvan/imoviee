@@ -82,24 +82,61 @@ tools:context=".Profile">
 
             <Button
                 android:id="@+id/Verify"
-                android:layout_width="407dp"
+                android:layout_width="391dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
-                android:backgroundTint="#DD2C00"
+                android:backgroundTint="#FF9800"
                 android:text="Verify Email"
                 android:textColor="#fff"
-                android:textColorLink="#fff" />
+                android:textColorLink="#fff"
+                app:rippleColor="#DCAE25" />
 
             <!-- ImageView for Hero Section -->
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="370dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="Super Controls"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="391dp"
+                android:layout_height="54dp"
+                android:layout_gravity="center"
+                android:backgroundTint="#404040"
+                android:text="Films"
+                android:textAlignment="viewStart"
+                android:textColor="#BCBCBC"
+                app:rippleColor="#474747" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="391dp"
+                android:layout_height="54dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="2dp"
+                android:backgroundTint="#404040"
+                android:text="Genres"
+                android:textAlignment="viewStart"
+                android:textColor="#BCBCBC"
+                app:rippleColor="#474747" />
+
             <ImageView
                 android:id="@+id/imageView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:src="@drawable/settings"
+                android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginHorizontal="10dp" />
+                android:adjustViewBounds="true"
+                android:src="@drawable/settings" />
 
             <Button
                 android:id="@+id/logout"
