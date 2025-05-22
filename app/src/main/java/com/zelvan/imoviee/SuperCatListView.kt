@@ -2,25 +2,23 @@ package com.zelvan.imoviee
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.zelvan.imoviee.adapter.GenreAdapter
+import com.zelvan.imoviee.data.Genre
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.zelvan.imoviee.SuperCatListView.Companion.REQUEST_CODE_ADD_MENU
-import com.zelvan.imoviee.adapter.FilmAdapter
-import com.zelvan.imoviee.data.Film
-import com.zelvan.imoviee.databinding.ActivitySuperFilmListViewBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.zelvan.imoviee.databinding.ActivitySuperCatListViewBinding
 
-class SuperFilmListView : AppCompatActivity() {
+class SuperCatListView : AppCompatActivity() {
 
-    private lateinit var binding: ActivitySuperFilmListViewBinding
-    private val filmList = mutableListOf<Film>()
-    private lateinit var filmAdapter: FilmAdapter // Declare adapter as a class member
+    private lateinit var binding: ActivitySuperCatListViewBinding
+    private val genreList = mutableListOf<Genre>()
+    private lateinit var genreAdapter: GenreAdapter // Declare adapter as a class member
     private lateinit var firestore: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,25 +27,34 @@ class SuperFilmListView : AppCompatActivity() {
         enableEdgeToEdge()
 
         // Inflate the layout using View Binding
-        binding = ActivitySuperFilmListViewBinding.inflate(layoutInflater)
-        setContentView(binding.root) // Set the content view to the root of the binding
+        binding = ActivitySuperCatListViewBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         firestore = FirebaseFirestore.getInstance()
 
-        // Use binding.main for the root view ID (assuming the root layout ID in XML is 'main')
+        // Use binding.main for the root view ID
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // 3. Buat Objek Adapter
-        filmAdapter = FilmAdapter(filmList)
+        // 1. Ambil Referensi RecyclerView - Now accessed via binding
+        // recyclerViewGenres = findViewById(R.id.recyclerView_genres) // Old way
 
-        // 4. Set LayoutManager (buat tampilan vertikal) using binding
-        binding.recyclerViewFilms.layoutManager = LinearLayoutManager(this) // Use binding.recyclerViewFilms
+        // 3. Buat Objek Adapter Genre
+        genreAdapter = GenreAdapter(genreList) { genre ->
+            val intent = Intent(this, SuperCatEdit::class.java)
+            intent.putExtra("genreId", genre.id)
+            startActivity(intent)
+        }
 
-        // 5. Set Adapter ke RecyclerView using binding
-        binding.recyclerViewFilms.adapter = filmAdapter // Use binding.recyclerViewFilms
+        // 4. Set LayoutManager (LinearLayoutManager buat tampilan vertikal)
+        // Use binding.recyclerViewGenres
+        binding.recyclerViewGenres.layoutManager = LinearLayoutManager(this)
+
+        // 5. Set Adapter ke RecyclerView
+        // Use binding.recyclerViewGenres
+        binding.recyclerViewGenres.adapter = genreAdapter
 
         // Access the backButton using View Binding
         // Make sure your Button/ImageButton in XML has android:id="@+id/backButton"
@@ -58,30 +65,30 @@ class SuperFilmListView : AppCompatActivity() {
             // finish()
         }
 
-        binding.fabAddFilms.setOnClickListener {
-            val intent = Intent(this, SuperFilmInput::class.java)
+        binding.fabAddgenres.setOnClickListener {
+            val intent = Intent(this, SuperCatInput::class.java)
             startActivityForResult(intent, REQUEST_CODE_ADD_MENU)
         }
 
-        loadFilmData()
+        loadGenreData()
     }
 
-    private fun loadFilmData() {
-        firestore.collection("films").get().addOnSuccessListener { documents ->
-            filmList.clear()
+    private fun loadGenreData() {
+        firestore.collection("genres").get().addOnSuccessListener { documents ->
+            genreList.clear()
             for (document in documents) {
-                val menu = document.toObject(Film::class.java)
+                val menu = document.toObject(Genre::class.java)
                 menu.id = document.id
-                filmList.add(menu)
+                genreList.add(menu)
             }
-            filmAdapter.notifyDataSetChanged() // Call notifyDataSetChanged() on the instance
+            genreAdapter.notifyDataSetChanged() // Call notifyDataSetChanged() on the instance
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_ADD_MENU && resultCode == RESULT_OK) {
-            loadFilmData()
+            loadGenreData()
         }
     }
     companion object {
@@ -89,6 +96,6 @@ class SuperFilmListView : AppCompatActivity() {
     }
     override fun onResume() {
         super.onResume()
-        loadFilmData()
+        loadGenreData()
     }
 }

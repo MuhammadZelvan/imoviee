@@ -82,10 +82,11 @@ tools:context=".Profile">
 
             <Button
                 android:id="@+id/Verify"
-                android:layout_width="391dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
+                android:layout_marginHorizontal="10dp"
                 android:backgroundTint="#FF9800"
                 android:text="Verify Email"
                 android:textColor="#fff"
@@ -96,21 +97,22 @@ tools:context=".Profile">
 
             <TextView
                 android:id="@+id/textView13"
-                android:layout_width="370dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="2dp"
                 android:text="Super Controls"
                 android:textColor="#FFFFFF"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button"
-                android:layout_width="391dp"
+                android:id="@+id/btnsuperfilms"
+                android:layout_width="match_parent"
                 android:layout_height="54dp"
-                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="8dp"
                 android:backgroundTint="#404040"
                 android:text="Films"
                 android:textAlignment="viewStart"
@@ -118,10 +120,10 @@ tools:context=".Profile">
                 app:rippleColor="#474747" />
 
             <Button
-                android:id="@+id/button2"
-                android:layout_width="391dp"
+                android:id="@+id/btnsupergenres"
+                android:layout_width="match_parent"
                 android:layout_height="54dp"
-                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="2dp"
                 android:backgroundTint="#404040"
                 android:text="Genres"

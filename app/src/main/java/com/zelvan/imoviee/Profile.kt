@@ -71,6 +71,26 @@ class Profile : Fragment() {
 //        return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // --- ADD INTENT LOGIC HERE ---
+        // Navigate to SuperFilmListView when the "Films" button is clicked
+        // Make sure your button in XML has android:id="@+id/button"
+        binding.btnsuperfilms.setOnClickListener {
+            val intent = Intent(activity, SuperFilmListView::class.java) // Replace with your Activity class
+            startActivity(intent)
+        }
+
+        // Navigate to SuperCatListView when the "Genres" button is clicked
+        // Make sure your button in XML has android:id="@+id/button2"
+        binding.btnsupergenres.setOnClickListener {
+            val intent = Intent(activity, SuperCatListView::class.java) // Replace with your Activity class
+            startActivity(intent)
+        }
+        // --- END OF INTENT LOGIC ---
+    }
+
     override fun onResume() {
         super.onResume()
 

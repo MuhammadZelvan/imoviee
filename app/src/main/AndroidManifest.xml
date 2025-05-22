@@ -21,6 +21,18 @@
         android:theme="@style/Theme.IMoviee"
         tools:targetApi="31">
         <activity
+            android:name=".SuperCatEdit"
+            android:exported="false" />
+        <activity
+            android:name=".SuperCatInput"
+            android:exported="false" />
+        <activity
+            android:name=".SuperCatListView"
+            android:exported="false" />
+        <activity
+            android:name=".SuperFilmInput"
+            android:exported="false" />
+        <activity
             android:name=".SuperFilmListView"
             android:exported="false"
             android:label="@string/title_activity_super_film_list_view"
