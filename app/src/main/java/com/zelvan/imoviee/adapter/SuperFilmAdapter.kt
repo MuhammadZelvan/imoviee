@@ -8,12 +8,19 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.zelvan.imoviee.R // Import file R buat akses resource ID
 import com.bumptech.glide.Glide // Contoh library buat load gambar dari URL
+import com.google.firebase.firestore.FirebaseFirestore
 import com.zelvan.imoviee.data.Film
+import com.zelvan.imoviee.data.Genre
 
 // Import library lain yang kamu butuhin (misal: context, dll)
 
-class FilmAdapter(private val filmList: List<Film>) :
+class FilmAdapter(
+    private val filmList: List<Film>,
+    private val onItemClick: (Film) -> Unit
+) :
     RecyclerView.Adapter<FilmAdapter.ViewHolder>() {
+
+    private val db = FirebaseFirestore.getInstance()
 
     // Class ViewHolder di dalam Adapter
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -36,7 +43,6 @@ class FilmAdapter(private val filmList: List<Film>) :
 
         // Bind data ke View di ViewHolder
         holder.textViewTitle.text = film.title
-        holder.textViewGenre.text = film.genre.joinToString(", ")
         holder.textViewStats.text = "${film.views} Views | ${film.rating} Rating"
         holder.textViewSynopsis.text = film.synopsis
 
@@ -47,9 +53,27 @@ class FilmAdapter(private val filmList: List<Film>) :
             .error(R.drawable.error_poster)
             .into(holder.imageViewPoster)
 
+        if (film.genre.isNotEmpty()) {
+            db.document(film.genre)
+                .get()
+                .addOnSuccessListener { documentSnapshot ->
+                    val genreName = documentSnapshot.getString("name")
+                    if (genreName != null) {
+                        holder.textViewGenre.text = "Genre: $genreName"
+                    } else {
+                        holder.textViewGenre.text = "Genre: Not specified"
+                    }
+                }
+                .addOnFailureListener { e ->
+                    holder.textViewGenre.text = "Genre: Error"
+                }
+        } else {
+            holder.textViewGenre.text = "Genre: Not specified"
+        }
+
         // OnClickListener buat item
         holder.itemView.setOnClickListener {
-            // TODO: Lakukan aksi pas item diklik
+            onItemClick(film)
         }
     }
 

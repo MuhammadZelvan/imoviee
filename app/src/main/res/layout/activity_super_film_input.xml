@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/main"
     android:background="#4D4D4D"
     tools:context=".SuperFilmInput">
 
@@ -13,6 +14,15 @@ android:id="@+id/toolbar"
 android:layout_width="match_parent"
 android:layout_height="56dp"
 android:background="#4D4D4D">
+
+    <ImageButton
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/arrow_back"
+        android:contentDescription="Back" />
 
 <!-- Centered TextView as the title -->
 <TextView
@@ -67,46 +77,18 @@ android:background="#151515">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Genres"
+        android:text="Genre"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="#FFFFFF"
         android:layout_marginTop="8dp"/>
-    <LinearLayout
+    <Spinner
+        android:id="@+id/spinnerGenre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Add Genre"
-            app:hintTextColor="#A0A0A0">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextGenre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:imeOptions="actionDone"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#505050"/>
-        </com.google.android.material.textfield.TextInputLayout>
-        <Button
-            android:id="@+id/buttonAddGenre"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add"
-            android:backgroundTint="#858585"
-            android:textColor="#FFFFFF"
-            android:layout_marginStart="8dp"/>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/linearLayoutGenres"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"/>
+        android:backgroundTint="#A0A0A0"
+        android:overlapAnchor="false"
+        android:spinnerMode="dropdown"
+        android:popupBackground="#303030"/>
 
     <!-- Synopsis -->
     <com.google.android.material.textfield.TextInputLayout
@@ -234,13 +216,14 @@ android:background="#151515">
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#505050"/>
         </com.google.android.material.textfield.TextInputLayout>
-        <Button
+        <ImageButton
             android:id="@+id/buttonAddPreviewUrl"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add"
+            android:layout_height="60dp"
             android:backgroundTint="#858585"
-            android:textColor="#FFFFFF"
+            android:src="@android:drawable/ic_input_add"
+            app:tint="#FFFFFF"
+            android:contentDescription="Add URL"
             android:layout_marginStart="8dp"/>
     </LinearLayout>
     <LinearLayout

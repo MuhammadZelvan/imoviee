@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Untuk membuat sudut membulat (rounded corners) -->
+    <corners android:radius="8dp"/>
+    <!-- Warna solid untuk latar belakang -->
+    <solid android:color="#303030"/>
+    <!-- Garis tepi (border) -->
+    <stroke android:width="1dp" android:color="#A0A0A0"/>
+    <!-- Padding di dalam shape -->
+    <padding android:left="8dp" android:right="8dp" android:top="4dp" android:bottom="4dp"/>
+</shape>

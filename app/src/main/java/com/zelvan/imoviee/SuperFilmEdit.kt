@@ -1,14 +1,12 @@
 package com.zelvan.imoviee
 
 import android.os.Bundle
-import android.widget.ArrayAdapter // Import ArrayAdapter
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.LinearLayout
-import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
-import android.view.View // Untuk OnItemSelectedListener
-import android.widget.AdapterView // Untuk OnItemSelectedListener
-
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -16,42 +14,46 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.firestore.FirebaseFirestore
-import com.zelvan.imoviee.data.Film
+import com.zelvan.imoviee.data.Film // Pastikan import data class Film
 import com.zelvan.imoviee.data.Genre
-import com.zelvan.imoviee.databinding.ActivitySuperFilmInputBinding
+import com.zelvan.imoviee.databinding.ActivitySuperFilmEditBinding
 
-class SuperFilmInput : AppCompatActivity() {
+class SuperFilmEdit : AppCompatActivity() {
+    private lateinit var binding: ActivitySuperFilmEditBinding
+    private lateinit var filmId: String
+    private lateinit var firestore: FirebaseFirestore
 
-    private val db = FirebaseFirestore.getInstance()
-    private val availableGenres = mutableListOf<Genre>() // Untuk menyimpan semua genre yang tersedia
-    private var selectedGenrePath: String = "" // Untuk menyimpan path genre yang dipilih film ini
-    private val previewUrls = mutableListOf<String>()
+    private val previewUrls = mutableListOf<String>() // List untuk menampung URL preview saat diedit
+    private var selectedGenrePath: String = "" // String untuk menampung path genre yang terpilih
+    private val availableGenres = mutableListOf<Genre>() // List semua genre yang tersedia
 
-    private lateinit var binding: ActivitySuperFilmInputBinding
-    private lateinit var genreSpinnerAdapter: ArrayAdapter<String> // Adapter untuk Spinner Genre
+    private lateinit var genreSpinnerAdapter: ArrayAdapter<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivitySuperFilmInputBinding.inflate(layoutInflater)
+        binding = ActivitySuperFilmEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // Inisialisasi Spinner Adapter (awal kosong)
+        firestore = FirebaseFirestore.getInstance()
+        filmId = intent.getStringExtra("filmId") ?: ""
+
+        // Inisialisasi Spinner Adapter (awal kosong / placeholder)
         genreSpinnerAdapter = ArrayAdapter(this, R.layout.spinner_item_custom, mutableListOf("Loading Genres..."))
-        genreSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_custom) // Tampilan dropdown
+        genreSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_custom)
         binding.spinnerGenre.adapter = genreSpinnerAdapter
 
         // Set Listener untuk Spinner
         binding.spinnerGenre.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                // Jangan lakukan apa-apa jika "Loading Genres..." terpilih atau jika availableGenres kosong
                 if (position > 0 && availableGenres.isNotEmpty()) { // index 0 adalah "Select Genre"
-                    val selectedGenre = availableGenres[position - 1] // -1 karena ada item "Select Genre" di awal
+                    val selectedGenre = availableGenres[position - 1]
                     selectedGenrePath = "genres/${selectedGenre.id}"
                 } else {
                     selectedGenrePath = "" // Reset jika item pertama atau tidak valid
@@ -63,26 +65,34 @@ class SuperFilmInput : AppCompatActivity() {
             }
         }
 
+        // Listener untuk tombol Add Preview URL
         binding.buttonAddPreviewUrl.setOnClickListener {
             addPreviewUrl()
         }
 
-        binding.backButton.setOnClickListener {
-            // This will finish the current activity and go back to the previous one in the stack
-            onBackPressedDispatcher.onBackPressed() // Recommended way
-            // Alternatively, you could use:
-            // finish()
-        }
-
+        // Listener untuk tombol Submit (Update Film)
         binding.buttonSubmit.setOnClickListener {
             saveFilmToFirestore()
         }
 
+        // Listener untuk tombol Hapus Film
+        binding.btnHapus.setOnClickListener {
+            deleteFilm()
+        }
+
+        // Listener untuk tombol Back
+        binding.backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        // Panggil fetchGenres() terlebih dahulu karena ini data dasar untuk Spinner
         fetchGenres()
+        // ambilData() dipanggil setelah fetchGenres Selesai agar availableGenres terisi
+        // Ini akan kita panggil di dalam callback fetchGenres() atau di fungsi terpisah setelah keduanya siap
     }
 
     private fun fetchGenres() {
-        db.collection("genres")
+        firestore.collection("genres")
             .get()
             .addOnSuccessListener { result ->
                 availableGenres.clear()
@@ -90,14 +100,15 @@ class SuperFilmInput : AppCompatActivity() {
                 for (document in result) {
                     val genre = document.toObject(Genre::class.java).copy(id = document.id)
                     availableGenres.add(genre)
-                    genreNamesForSpinner.add(genre.name) // Tambahkan nama genre ke list untuk spinner
+                    genreNamesForSpinner.add(genre.name)
                 }
                 genreSpinnerAdapter.clear()
                 genreSpinnerAdapter.addAll(genreNamesForSpinner)
                 genreSpinnerAdapter.notifyDataSetChanged()
 
-                // Jika sedang dalam mode edit film, set seleksi spinner di sini
-                // Misalnya: if (isEditing) setSpinnerSelectionForFilm(existingFilmData.genreRef)
+                // Panggil ambilData() di sini setelah genre berhasil di-fetch
+                // Ini penting agar Spinner bisa diatur seleksinya dengan benar
+                ambilData()
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error fetching genres: ${exception.message}", Toast.LENGTH_SHORT).show()
@@ -106,10 +117,6 @@ class SuperFilmInput : AppCompatActivity() {
                 genreSpinnerAdapter.notifyDataSetChanged()
             }
     }
-
-    // Fungsi ini diganti dengan Spinner, jadi tidak perlu dialog lagi
-    // private fun showGenreSelectionDialog() { /* ... */ }
-    // private fun updateSelectedGenreUI() { /* ... */ } // Tidak lagi dibutuhkan karena Spinner mengelola tampilannya
 
     private fun addPreviewUrl() {
         val url = binding.editTextPreviewUrl.text.toString().trim()
@@ -167,13 +174,11 @@ class SuperFilmInput : AppCompatActivity() {
         val coverPortrait = binding.editTextCoverPortrait.text.toString().trim()
         val coverLandscape = binding.editTextCoverLandscape.text.toString().trim()
 
-        // Validasi Spinner Genre
-        if (selectedGenrePath.isEmpty()) { // Jika item "Select Genre" atau belum memilih
+        if (selectedGenrePath.isEmpty()) {
             Toast.makeText(this, "Please select a genre", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Validasi input lainnya
         if (title.isEmpty() || synopsis.isEmpty() || ratingString.isEmpty() || viewsString.isEmpty() ||
             coverPortrait.isEmpty() || coverLandscape.isEmpty() || previewUrls.isEmpty()) {
             Toast.makeText(this, "Please fill all fields and add preview URLs", Toast.LENGTH_LONG).show()
@@ -192,45 +197,90 @@ class SuperFilmInput : AppCompatActivity() {
             return
         }
 
-        val newFilm = Film(
-            title = title,
-            genre = selectedGenrePath, // Gunakan path genre yang dipilih dari Spinner
-            synopsis = synopsis,
-            rating = rating,
-            views = views,
-            coverPortrait = coverPortrait,
-            coverLandscape = coverLandscape,
-            preview = previewUrls.toList()
+        // Menggunakan mapOf untuk update, karena kita tidak mengubah semua field
+        val updateData = mapOf(
+            "title" to title,
+            "synopsis" to synopsis,
+            "rating" to rating,
+            "views" to views,
+            "coverPortrait" to coverPortrait,
+            "coverLandscape" to coverLandscape,
+            "preview" to previewUrls.toList(), // Menggunakan toList() agar immutable
+            "genreRef" to selectedGenrePath // Pastikan field ini namanya "genreRef" di Film.kt
         )
 
-        db.collection("films")
-            .add(newFilm)
-            .addOnSuccessListener { documentReference ->
-                Toast.makeText(this, "Film '${newFilm.title}' added successfully!", Toast.LENGTH_SHORT).show()
-                clearForm()
-
-                setResult(RESULT_OK)
-                finish()
+        firestore.collection("films").document(filmId).update(updateData)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Film changed successfully!", Toast.LENGTH_SHORT).show()
+                finish() // Kembali ke activity sebelumnya
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Error adding film: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Error updating film: ${e.message}", Toast.LENGTH_LONG).show()
             }
     }
 
-    private fun clearForm() {
-        binding.editTextTitle.setText("")
-        binding.editTextSynopsis.setText("")
-        binding.editTextRating.setText("")
-        binding.editTextviews.setText("")
-        binding.editTextCoverPortrait.setText("")
-        binding.editTextCoverLandscape.setText("")
-        binding.editTextPreviewUrl.setText("")
+    private fun ambilData() {
+        firestore.collection("films").document(filmId).get()
+            .addOnSuccessListener { doc ->
+                if (doc.exists()) {
+                    val film = doc.toObject(Film::class.java) // Konversi langsung ke objek Film
+                    film?.let {
+                        binding.editTextTitle.setText(it.title)
+                        binding.editTextSynopsis.setText(it.synopsis)
+                        binding.editTextRating.setText(it.rating.toString()) // Konversi Double ke String
+                        binding.editTextviews.setText(it.views.toString())   // Konversi Int ke String
+                        binding.editTextCoverPortrait.setText(it.coverPortrait)
+                        binding.editTextCoverLandscape.setText(it.coverLandscape)
 
-        // Reset Spinner
-        binding.spinnerGenre.setSelection(0) // Pilih item pertama ("Select Genre")
-        selectedGenrePath = ""
+                        // --- Mengisi Genre Spinner ---
+                        selectedGenrePath = it.genre // Ambil path genre dari film
+                        // Cari indeks genre ini di `availableGenres` untuk setting Spinner
+                        val genreIndex = availableGenres.indexOfFirst { genre ->
+                            "genres/${genre.id}" == selectedGenrePath
+                        }
+                        // +1 karena ada placeholder "Select Genre" di index 0
+                        if (genreIndex != -1) { // Jika genre ditemukan
+                            binding.spinnerGenre.setSelection(genreIndex + 1)
+                        } else {
+                            binding.spinnerGenre.setSelection(0) // Default ke placeholder
+                        }
 
-        previewUrls.clear()
-        updatePreviewUrlsUI()
+                        // --- Mengisi Preview URLs ---
+                        previewUrls.clear()
+                        // Pastikan field "preview" di Firestore itu array of strings
+                        // doc.toObject(Film::class.java) sudah handle ini jika fieldnya sama
+                        it.preview.forEach { url ->
+                            previewUrls.add(url)
+                        }
+                        updatePreviewUrlsUI() // Update UI untuk preview URLs
+                    }
+                } else {
+                    Toast.makeText(this, "Film not found", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error fetching film data: ${e.message}", Toast.LENGTH_LONG).show()
+                finish()
+            }
+    }
+
+    private fun deleteFilm() {
+        // Tambahkan konfirmasi dialog sebelum menghapus (disarankan)
+        AlertDialog.Builder(this)
+            .setTitle("Delete Film")
+            .setMessage("Are you sure you want to delete this film?")
+            .setPositiveButton("Yes") { dialog, which ->
+                firestore.collection("films").document(filmId).delete()
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Film deleted successfully!", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(this, "Error deleting film: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
+            }
+            .setNegativeButton("No", null)
+            .show()
     }
 }

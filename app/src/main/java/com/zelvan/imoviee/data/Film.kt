@@ -7,7 +7,7 @@ data class Film(
     val coverPortrait: String = "",
     val coverLandscape: String = "",
     val title: String = "",
-    val genre: List<DocumentReference> = emptyList(),
+    val genre: String = "",
     val views: Int = 0,
     val rating: Double = 0.0,
     val synopsis: String = "",

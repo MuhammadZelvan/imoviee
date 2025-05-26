@@ -41,7 +41,11 @@ class SuperFilmListView : AppCompatActivity() {
         }
 
         // 3. Buat Objek Adapter
-        filmAdapter = FilmAdapter(filmList)
+        filmAdapter = FilmAdapter(filmList) { film ->
+            val intent = Intent(this, SuperFilmEdit::class.java)
+            intent.putExtra("filmId", film.id)
+            startActivity(intent)
+        }
 
         // 4. Set LayoutManager (buat tampilan vertikal) using binding
         binding.recyclerViewFilms.layoutManager = LinearLayoutManager(this) // Use binding.recyclerViewFilms
