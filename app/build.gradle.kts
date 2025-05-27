@@ -47,7 +47,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.firestore.ktx) // Ini harusnya juga di bawah BOM biar versinya ditarik BOM
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -55,12 +55,16 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
 
-    // Firebase BOM
-    implementation(platform("com.google.firebase:firebase-bom:31.5.0"))
+    // Firebase BOM - Selalu letakkan di paling atas dependensi Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0")) // <-- Versi BOM lo
 
     // Firebase Auth (uses BOM for version)
     implementation("com.google.firebase:firebase-auth-ktx")
 
-    // Google Sign-in
-    implementation("com.google.android.gms:play-services-auth:20.4.0")
+    // Google Sign-in - UPDATE VERSI INI
+    implementation("com.google.android.gms:play-services-auth:21.0.0") // <--- UBAH VERSI INI!
+
+    // Firebase Firestore (setelah BOM agar versi ditarik oleh BOM)
+    // Sebaiknya, pindahkan ini juga ke bawah BOM agar versinya disamakan oleh BOM.
+    // implementation("com.google.firebase:firebase-firestore-ktx") // Jika mau versi ditarik BOM
 }

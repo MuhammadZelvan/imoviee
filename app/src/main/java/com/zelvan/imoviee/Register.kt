@@ -13,11 +13,13 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.firestore.FirebaseFirestore
 import com.zelvan.imoviee.databinding.ActivityRegisterBinding
 
 class Register : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
@@ -30,6 +32,7 @@ class Register : AppCompatActivity() {
         }
         // Inisialisasi Firebase Auth
         auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
         binding.btnSignUp.setOnClickListener {
             val email = binding.editTextTextEmailAddress.text.toString()
@@ -62,20 +65,49 @@ class Register : AppCompatActivity() {
                     .build()
 
                 user?.updateProfile(profileUpdates)
-                    ?.addOnCompleteListener { updateTask ->
-                        if (updateTask.isSuccessful) {
-                            val intent = Intent(this, AccCreated::class.java)
-                            startActivity(intent)
-                            finish()
+                    ?.addOnCompleteListener { updateProfileTask -> // Ganti nama task agar tidak sama
+                        if (updateProfileTask.isSuccessful) {
+                            // --- BAGIAN BARU: BUAT DOKUMEN USER DI FIRESTORE ---
+                            user?.let { firebaseUser -> // Pastikan firebaseUser tidak null
+                                val userDocData = hashMapOf(
+                                    "email" to firebaseUser.email,
+                                    "username" to fullname, // Menggunakan fullname sebagai username
+                                    "watchlist" to listOf<String>(), // Watchlist kosong saat pertama dibuat
+                                )
+
+                                db.collection("users").document(firebaseUser.uid)
+                                    .set(userDocData) // Gunakan .set() untuk membuat atau menimpa dokumen
+                                    .addOnSuccessListener {
+                                        // Sukses membuat dokumen user di Firestore
+                                        Toast.makeText(this, "Account created and user data saved!", Toast.LENGTH_SHORT).show()
+                                        val intent = Intent(this, AccCreated::class.java)
+                                        startActivity(intent)
+                                        finish()
+                                    }
+                                    .addOnFailureListener { e ->
+                                        // Gagal membuat dokumen user di Firestore, tapi akun Auth sudah dibuat
+                                        Toast.makeText(this, "Account created, but failed to save user data: ${e.message}", Toast.LENGTH_LONG).show()
+                                        // Tetap navigasi meskipun Firestore gagal, atau berikan opsi lain
+                                        val intent = Intent(this, AccCreated::class.java)
+                                        startActivity(intent)
+                                        finish()
+                                    }
+                            } ?: run {
+                                // Jika user object somehow null setelah registrasi berhasil
+                                Toast.makeText(this, "User object is null after successful registration.", Toast.LENGTH_SHORT).show()
+                                val intent = Intent(this, AccCreated::class.java) // Tetap navigasi
+                                startActivity(intent)
+                                finish()
+                            }
                         } else {
-                            Toast.makeText(this, "Gagal update profile: ${updateTask.exception?.message}", Toast.LENGTH_SHORT).show()
+                            // Gagal update profile di Firebase Auth
+                            Toast.makeText(this, "Gagal update profile: ${updateProfileTask.exception?.message}", Toast.LENGTH_SHORT).show()
+                            // Karena gagal update profile, tidak lanjut ke Firestore
                         }
                     }
             } else {
-                // Gagal membuat akun, tampilkan pesan error
-                Toast.makeText(this, "Authentication failed: ${task.exception?.message}",
-                    Toast.LENGTH_SHORT).show()
+                // Gagal membuat akun di Firebase Auth
+                Toast.makeText(this, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-}
+    }}

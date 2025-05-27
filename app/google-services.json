@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "517898032695-oo7ug7h83fkpvjoc2nk4ftjcac14ftdm.apps.googleusercontent.com",
+          "client_id": "517898032695-1apoiiqn04lv6dfvts80k60ggmki63ju.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.zelvan.imoviee",
-            "certificate_hash": "510add64dcb1ce29402e37527111a3a1279c83d5"
+            "certificate_hash": "bfb2e815201c5450b1ede5329b1f0d752a02c4cf"
           }
         },
         {

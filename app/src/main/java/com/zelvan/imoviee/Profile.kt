@@ -58,7 +58,10 @@ class Profile : Fragment() {
         val backButton: Button = view.findViewById(R.id.logout)
         backButton.setOnClickListener {
             auth.signOut()
-            requireActivity().finish() // Ends the hosting activity
+            // Navigate back to MainActivity
+            val intent = Intent(activity, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
         }
 
         val verifyButton: Button = view.findViewById(R.id.Verify)
