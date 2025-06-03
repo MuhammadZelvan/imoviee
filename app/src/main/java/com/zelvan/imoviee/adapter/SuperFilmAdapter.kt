@@ -8,9 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.zelvan.imoviee.R // Import file R buat akses resource ID
 import com.bumptech.glide.Glide // Contoh library buat load gambar dari URL
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import com.zelvan.imoviee.data.Film
-import com.zelvan.imoviee.data.Genre
 
 // Import library lain yang kamu butuhin (misal: context, dll)
 
@@ -27,14 +28,14 @@ class FilmAdapter(
         val imageViewPoster: ImageView = itemView.findViewById(R.id.imageView_poster)
         val textViewTitle: TextView = itemView.findViewById(R.id.textView_title)
         val textViewGenre: TextView = itemView.findViewById(R.id.textView_genre)
-        val textViewStats: TextView = itemView.findViewById(R.id.textView_stats)
-        val textViewSynopsis: TextView = itemView.findViewById(R.id.textView_synopsis)
+        val tvInfoRating: TextView = itemView.findViewById(R.id.tvInfoRating)
+        val tvInfoViews: TextView = itemView.findViewById(R.id.tvInfoViews)
     }
 
     // Method-method wajib dari RecyclerView.Adapter
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_superfilm, parent, false) // Inflate layout item
+            .inflate(R.layout.item_filmlist, parent, false) // Inflate layout item
         return ViewHolder(view) // Kembalikan objek ViewHolder
     }
 
@@ -43,14 +44,15 @@ class FilmAdapter(
 
         // Bind data ke View di ViewHolder
         holder.textViewTitle.text = film.title
-        holder.textViewStats.text = "${film.views} Views | ${film.rating} Rating"
-        holder.textViewSynopsis.text = film.synopsis
+        holder.tvInfoRating.text = film.rating.toString()
+        holder.tvInfoViews.text = film.views.toString()
 
         // Load gambar pake Glide
         Glide.with(holder.itemView.context)
             .load(film.coverPortrait) // Ganti kalo mau pake coverLandscape
             .placeholder(R.drawable.placeholder_poster)
-            .error(R.drawable.error_poster)
+            .error(R.drawable.filmhome_rounded_bg)
+            .apply(RequestOptions.bitmapTransform(RoundedCorners(16)))
             .into(holder.imageViewPoster)
 
         if (film.genre.isNotEmpty()) {
@@ -59,16 +61,16 @@ class FilmAdapter(
                 .addOnSuccessListener { documentSnapshot ->
                     val genreName = documentSnapshot.getString("name")
                     if (genreName != null) {
-                        holder.textViewGenre.text = "Genre: $genreName"
+                        holder.textViewGenre.text = genreName
                     } else {
-                        holder.textViewGenre.text = "Genre: Not specified"
+                        holder.textViewGenre.text = "Not specified"
                     }
                 }
                 .addOnFailureListener { e ->
-                    holder.textViewGenre.text = "Genre: Error"
+                    holder.textViewGenre.text = "Error"
                 }
         } else {
-            holder.textViewGenre.text = "Genre: Not specified"
+            holder.textViewGenre.text = "Not specified"
         }
 
         // OnClickListener buat item

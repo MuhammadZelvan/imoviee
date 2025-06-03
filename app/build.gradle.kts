@@ -64,6 +64,9 @@ dependencies {
     // Google Sign-in - UPDATE VERSI INI
     implementation("com.google.android.gms:play-services-auth:21.0.0") // <--- UBAH VERSI INI!
 
+    implementation ("com.google.android.flexbox:flexbox:3.0.0")
+
+
     // Firebase Firestore (setelah BOM agar versi ditarik oleh BOM)
     // Sebaiknya, pindahkan ini juga ke bawah BOM agar versinya disamakan oleh BOM.
     // implementation("com.google.firebase:firebase-firestore-ktx") // Jika mau versi ditarik BOM
